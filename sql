@@ -1,0 +1,1 @@
+SELECT COUNT(code) from firebird_stock.monthly_data ;
