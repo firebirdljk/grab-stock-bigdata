@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         capitalize(&mut code);
         let mut col2:&str=row.get(1);
         let mut name=col2.to_string();
-        let mut web_url="http://data.gtimg.cn/flashdata/hushen/monthly/".to_string()+&code;
+        let mut web_url="http://data.gtimg.cn/flashdata/hushen/weekly/".to_string()+&code;
         web_url.push_str(".js?maxage=43201");
         println!("{}",web_url);
         let body = reqwest::get(&web_url)
@@ -65,12 +65,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             let tmp_min_pri=tmp_min_pri.parse::<f32>().unwrap();
             let tmp_date=date.unwrap();
             let rows = client
-                .query("SELECT code,name FROM monthly_data where code=$1::TEXT and date=$2::TEXT", &[&tmp_code,&tmp_date])
+                .query("SELECT code,name FROM weekly_data where code=$1::TEXT and date=$2::TEXT", &[&tmp_code,&tmp_date])
                 .await?;
             let count  = rows.len();
             if count.eq(&0) {
                 client.execute(
-                    "INSERT INTO monthly_data (code,name,\"StartPri\",\"EndPri\",\"MaxPri\",\"MinPri\",date) VALUES ($1, $2,$3,$4,$5,$6,$7)",
+                    "INSERT INTO weekly_data (code,name,\"StartPri\",\"EndPri\",\"MaxPri\",\"MinPri\",date) VALUES ($1, $2,$3,$4,$5,$6,$7)",
                     &[&tmp_code, &tmp_name, &tmp_start_pri, &tmp_end_pri, &tmp_max_pri, &tmp_min_pri, &tmp_date],
                 ).await?;
             };
